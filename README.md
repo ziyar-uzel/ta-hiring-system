@@ -1,7 +1,3 @@
-# CSE2115 - Project 
-
-The project was created by **Group 14B**
-
 ### Running 
 `gradle bootRun`
 
