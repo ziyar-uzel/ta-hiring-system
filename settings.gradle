@@ -1,0 +1,5 @@
+rootProject.name = 'template'
+include 'user', 'submission', 'course-microservice'
+project(':user').projectDir = file("microservices/user")
+project(':submission').projectDir = file("microservices/submission")
+project(':course-microservice').projectDir = file("microservices/course-microservice")

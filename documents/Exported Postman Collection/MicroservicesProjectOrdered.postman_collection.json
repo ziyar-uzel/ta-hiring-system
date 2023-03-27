@@ -1,0 +1,1351 @@
+{
+	"info": {
+		"_postman_id": "1e98dc1f-8ce0-4a31-8603-72b54caf98d2",
+		"name": "MicroservicesProjectOrdered",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user microservice",
+			"item": [
+				{
+					"name": "authenticate as Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Authorization is present\", function () {\r",
+									"    pm.response.to.have.header(\"Authorization\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Refresh is present\", function () {\r",
+									"    pm.response.to.have.header(\"RefreshToken\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"});\r",
+									"\r",
+									"let AuthToken = pm.response.headers.get(\"Authorization\");\r",
+									"let RefreshToken = pm.response.headers.get(\"RefreshToken\");\r",
+									"console.log(AuthToken);\r",
+									"console.log(RefreshToken);\r",
+									"pm.environment.set(\"AuthorizationStudent\", AuthToken);\r",
+									"pm.environment.set(\"RefreshTokenStudent\", RefreshToken);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"netid\" : \"amereuta\",\r\n    \"password\" : \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "authenticate as Lecturer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let AuthToken = pm.response.headers.get(\"Authorization\");\r",
+									"let RefreshToken = pm.response.headers.get(\"RefreshToken\");\r",
+									"console.log(AuthToken);\r",
+									"console.log(RefreshToken);\r",
+									"pm.environment.set(\"AuthorizationLecturer\", AuthToken);\r",
+									"pm.environment.set(\"RefreshTokenLecturer\", RefreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"netid\" : \"lofi\",\r\n    \"password\" : \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by netid of Andrew",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"Andrew\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/amereuta",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"amereuta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by netid of Lofi",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"Christoph\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/lofi",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"lofi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get grade by course",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/course?code=CSE1100&studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"course"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "CSE1100"
+								},
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get gpa by student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/gpa?studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"gpa"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "OOP",
+									"disabled": true
+								},
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get TAs for specific course",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "default"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8085/users/tas/info/course/CSE1100",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"tas",
+								"info",
+								"course",
+								"CSE1100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Grade Of Student",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "default"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/course?code=CSE1100&studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"course"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "CSE1100"
+								},
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rate student",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/rate?studentNumber=1&rating=4",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"rate"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "1"
+								},
+								{
+									"key": "rating",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add TA role (no show)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/addTaRole/CSE1505?studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"addTaRole",
+								"CSE1505"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get rating of student",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8085/users/rating?studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"rating"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get ratings of students (no show)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    1\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/users/ratings",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get course grades (no show)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    1\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/users/courseGrades?courseCode=CSE1100",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"courseGrades"
+							],
+							"query": [
+								{
+									"key": "courseCode",
+									"value": "CSE1100"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "submission-notification microservice",
+			"item": [
+				{
+					"name": "create Submission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"studentNumber\" : \"1\",\r\n    \"studentEmail\" : \"email\"\r\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/submission/create?course=CSE1505",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"submission",
+								"create"
+							],
+							"query": [
+								{
+									"key": "course",
+									"value": "CSE1505"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accept submission",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8086/submission/accept/1?lecturerId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"submission",
+								"accept",
+								"1"
+							],
+							"query": [
+								{
+									"key": "lecturerId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retract submission",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/submission/retract/1?studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"submission",
+								"retract",
+								"1"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8086/submission/status?studentNumber=1&submissionId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"submission",
+								"status"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "1"
+								},
+								{
+									"key": "submissionId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all pending submissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8086/submission/getAllPendingSubmissions?courseId=CSE1505&lecturerId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"submission",
+								"getAllPendingSubmissions"
+							],
+							"query": [
+								{
+									"key": "courseId",
+									"value": "CSE1505"
+								},
+								{
+									"key": "lecturerId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get recommendations for course",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\" : \"grade\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/submission/getRecommendationsForCourse?courseId=CSE1505&lecturerId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"submission",
+								"getRecommendationsForCourse"
+							],
+							"query": [
+								{
+									"key": "courseId",
+									"value": "CSE1505"
+								},
+								{
+									"key": "lecturerId",
+									"value": "1"
+								},
+								{
+									"key": "recommendationType",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "course microservice",
+			"item": [
+				{
+					"name": "get course by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/CSE1505",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"CSE1505"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get number of students for course",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/studentNumber/CSE1500",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"studentNumber",
+								"CSE1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get lecturers of course",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/lecturers/CSE1500",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"lecturers",
+								"CSE1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "description",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/description/CSE1505",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"description",
+								"CSE1505"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get start date of course",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/startDate/CSE1500",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"startDate",
+								"CSE1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get avilable courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/availableCourses",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"availableCourses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseCode\": \"CSE2215\",\r\n    \"startDate\": \"2021-10-12\",\r\n    \"endDate\": \"2021-11-20\",\r\n    \"numOfStudents\" : 200,\r\n    \"lecturers\" : [\r\n        111,\r\n        112\r\n    ],\r\n    \"candidateStudents\" : [\r\n        1111,\r\n        1112\r\n    ],\r\n    \"hiredStudents\" : [\r\n        1113,\r\n        1114\r\n    ],\r\n    \"description\" : \"description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8088/courses/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add hired student",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/add/hiredStudent/CSE1505?studentNumber=131551",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"add",
+								"hiredStudent",
+								"CSE1505"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "131551"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add candidate student",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/add/candidateStudent/CSE1505?studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"add",
+								"candidateStudent",
+								"CSE1505"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add lecturer",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/add/lecturer/CSE1505?lecturerId=456468",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"add",
+								"lecturer",
+								"CSE1505"
+							],
+							"query": [
+								{
+									"key": "lecturerId",
+									"value": "456468"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove letcurer",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/remove/lecturer/CSE1505?lecturerId=456468",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"remove",
+								"lecturer",
+								"CSE1505"
+							],
+							"query": [
+								{
+									"key": "lecturerId",
+									"value": "456468"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove candidate student",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/remove/candidateStudent/CSE1505?studentNumber=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"remove",
+								"candidateStudent",
+								"CSE1505"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove hired student",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenStudent}}",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/remove/hiredStudent/CSE1505?studentNumber=483358",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"remove",
+								"hiredStudent",
+								"CSE1505"
+							],
+							"query": [
+								{
+									"key": "studentNumber",
+									"value": "483358"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admission rate",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationLecturer}}",
+								"type": "text"
+							},
+							{
+								"key": "RefreshToken",
+								"value": "{{RefreshTokenLecturer}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/admissionRate/CSE1505",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"admissionRate",
+								"CSE1505"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get required number of TAs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthorizationStudent}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8088/courses/requiredNumberOfTa/CSE1505",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"courses",
+								"requiredNumberOfTa",
+								"CSE1505"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
